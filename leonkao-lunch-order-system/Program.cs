@@ -313,7 +313,7 @@ app.MapGet("/order/{groupId}", async (string groupId, HttpContext context) =>
     var merchant = merchants.FirstOrDefault(m => m.Id == group.MerchantId);
     var merchantName = merchant?.Name ?? "未知商家";
     var timeRange = $"{group.StartTime:yyyy年MM月dd日 HH:mm} ～ {group.EndTime:HH:mm}";
-    var now = DateTime.Now;
+    var now = NowTw();
     var isNotStarted = now < group.StartTime;
     var isClosed = now > group.EndTime;
     var isOpen = !isNotStarted && !isClosed;
@@ -600,8 +600,8 @@ app.MapPost("/groups/{groupId}/edit", async (string groupId, HttpRequest request
     if (group is null) return Results.Redirect("/");
 
     group.MerchantId = merchantId;
-    group.StartTime = DateTime.SpecifyKind(orderDate.ToDateTime(startTime), DateTimeKind.Local);
-    group.EndTime = DateTime.SpecifyKind(orderDate.ToDateTime(endTime), DateTimeKind.Local);
+    group.StartTime = orderDate.ToDateTime(startTime);
+    group.EndTime = orderDate.ToDateTime(endTime);
     SaveGroups(groups);
 
     return Results.Redirect("/");
