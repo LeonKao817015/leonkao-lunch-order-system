@@ -1,0 +1,21 @@
+# Build output
+bin/
+obj/
+
+# IDE
+.idea/
+.vs/
+*.user
+
+# Runtime data (JSON files & uploaded images are local state)
+merchants.json
+groups.json
+**/wwwroot/uploads/
+
+# .NET
+*.suo
+*.ncrunch*
+.DS_Store
+
+# Claude Code
+.claude/
