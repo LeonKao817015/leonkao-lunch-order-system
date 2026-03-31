@@ -1,0 +1,11 @@
+**/.git
+**/.idea
+**/.vs
+**/.claude
+**/bin
+**/obj
+**/wwwroot/uploads
+merchants.json
+groups.json
+global.json
+*.md
