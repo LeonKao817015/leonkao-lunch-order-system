@@ -50,6 +50,9 @@ void SaveGroups(List<Group> list) =>
 
 string H(string? text) => WebUtility.HtmlEncode(text ?? "");
 
+// 固定使用 UTC+8（台灣時間），避免 Render 伺服器在 UTC 環境下時區錯誤
+DateTime NowTw() => DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(8)).DateTime;
+
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
 // 首頁 - 列出所有群組
@@ -65,7 +68,7 @@ app.MapGet("/", async context =>
         var name = H(m?.Name ?? "未知商家");
         var timeRange = $"{g.StartTime:yyyy-MM-dd HH:mm} ~ {g.EndTime:HH:mm}";
         var count = g.Orders.Count;
-        var now = DateTime.Now;
+        var now = NowTw();
         var status = now < g.StartTime
             ? "<span style='color:#888;font-weight:bold;'>未開始</span>"
             : now > g.EndTime
@@ -282,8 +285,8 @@ app.MapPost("/groups", async (HttpRequest request) =>
         || !TimeOnly.TryParse(endTimeStr, out var endTime))
         return Results.Redirect("/groups/create");
 
-    var startDt = DateTime.SpecifyKind(orderDate.ToDateTime(startTime), DateTimeKind.Local);
-    var endDt = DateTime.SpecifyKind(orderDate.ToDateTime(endTime), DateTimeKind.Local);
+    var startDt = orderDate.ToDateTime(startTime);
+    var endDt = orderDate.ToDateTime(endTime);
 
     var groups = LoadGroups();
     var group = new Group { Id = Guid.NewGuid().ToString(), MerchantId = merchantId, StartTime = startDt, EndTime = endDt };
@@ -495,7 +498,7 @@ app.MapPost("/order/{groupId}", async (string groupId, HttpRequest request) =>
     var groups = LoadGroups();
     var group = groups.FirstOrDefault(g => g.Id == groupId);
 
-    var now2 = DateTime.Now;
+    var now2 = NowTw();
     if (group is null || now2 < group.StartTime || now2 > group.EndTime)
         return Results.Redirect($"/order/{groupId}");
 
