@@ -282,8 +282,8 @@ app.MapPost("/groups", async (HttpRequest request) =>
         || !TimeOnly.TryParse(endTimeStr, out var endTime))
         return Results.Redirect("/groups/create");
 
-    var startDt = orderDate.ToDateTime(startTime);
-    var endDt = orderDate.ToDateTime(endTime);
+    var startDt = DateTime.SpecifyKind(orderDate.ToDateTime(startTime), DateTimeKind.Local);
+    var endDt = DateTime.SpecifyKind(orderDate.ToDateTime(endTime), DateTimeKind.Local);
 
     var groups = LoadGroups();
     var group = new Group { Id = Guid.NewGuid().ToString(), MerchantId = merchantId, StartTime = startDt, EndTime = endDt };
@@ -597,8 +597,8 @@ app.MapPost("/groups/{groupId}/edit", async (string groupId, HttpRequest request
     if (group is null) return Results.Redirect("/");
 
     group.MerchantId = merchantId;
-    group.StartTime = orderDate.ToDateTime(startTime);
-    group.EndTime = orderDate.ToDateTime(endTime);
+    group.StartTime = DateTime.SpecifyKind(orderDate.ToDateTime(startTime), DateTimeKind.Local);
+    group.EndTime = DateTime.SpecifyKind(orderDate.ToDateTime(endTime), DateTimeKind.Local);
     SaveGroups(groups);
 
     return Results.Redirect("/");
