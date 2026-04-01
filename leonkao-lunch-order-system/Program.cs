@@ -99,6 +99,12 @@ app.MapGet("/", async context =>
           a:hover { text-decoration:underline; }
           .btn-del { background:#e53935; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer; font-size:13px; }
           .btn-del:hover { background:#b71c1c; }
+          .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+          @media (max-width:640px) {
+            body { padding:12px; }
+            nav a { padding:8px 12px; font-size:14px; }
+            h1 { font-size:22px; }
+          }
         </style>
         </head>
         <body>
@@ -108,10 +114,12 @@ app.MapGet("/", async context =>
           <a href="/groups/create">建立訂購群組</a>
         </nav>
         <h2>訂購群組列表</h2>
+        <div class="table-wrap">
         <table>
           <tr><th>商家名稱</th><th>開放時間</th><th>訂單數量</th><th>狀態</th><th>操作</th></tr>
           {{rows}}
         </table>
+        </div>
         </body>
         </html>
         """;
@@ -407,6 +415,16 @@ app.MapGet("/order/{groupId}", async (string groupId, HttpContext context) =>
           .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:9999; justify-content:center; align-items:center; cursor:zoom-out; }
           .lightbox.active { display:flex; }
           .lightbox img { max-width:92vw; max-height:92vh; border-radius:8px; box-shadow:0 4px 32px #000; }
+          .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+          @media (max-width:640px) {
+            body { padding:12px; }
+            h1 { font-size:20px; }
+            .page-header { flex-wrap:wrap; gap:8px; }
+            .share-wrap { order:3; flex-basis:100%; }
+            .top-layout { flex-direction:column; }
+            .top-right { width:100%; }
+            .btn-edit, .btn-del { padding:6px 10px; font-size:13px; }
+          }
         </style>
         </head>
         <body>
@@ -465,6 +483,7 @@ app.MapGet("/order/{groupId}", async (string groupId, HttpContext context) =>
           </div>
         </div>
         <h2>目前訂單（共 {{group.Orders.Count}} 筆）</h2>
+        <div class="table-wrap">
         <table>
           <tr><th>#</th><th>名字</th><th>餐點</th><th>金額</th><th>備註</th><th>操作</th></tr>
           {{orderRows}}
@@ -475,6 +494,7 @@ app.MapGet("/order/{groupId}", async (string groupId, HttpContext context) =>
             <td colspan="2"></td>
           </tr>
         </table>
+        </div>
         </body>
         </html>
         """;
@@ -675,9 +695,16 @@ app.MapGet("/order/{groupId}/summary", async (string groupId, HttpContext contex
           tr:hover { background:#f9f9f9; }
           .total-row td { font-weight:bold; background:#f0f7f0; }
           a { color:#4CAF50; text-decoration:none; }
+          .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
           .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:9999; justify-content:center; align-items:center; cursor:zoom-out; }
           .lightbox.active { display:flex; }
           .lightbox img { max-width:92vw; max-height:92vh; border-radius:8px; }
+          @media (max-width:640px) {
+            body { padding:12px; }
+            .layout { flex-direction:column; }
+            .menu-col { width:100%; }
+            .header { flex-wrap:wrap; gap:8px; }
+          }
           @media print {
             .header a, .lightbox { display:none !important; }
             body { background:#fff; }
@@ -701,6 +728,7 @@ app.MapGet("/order/{groupId}/summary", async (string groupId, HttpContext contex
           </div>
           <div class="order-col">
             <h2 style="margin-top:0">訂單列表（共 {{group.Orders.Count}} 筆）</h2>
+            <div class="table-wrap">
             <table>
               <tr><th>#</th><th>名字</th><th>餐點</th><th>金額</th><th>備註</th></tr>
               {{orderRows}}
@@ -711,6 +739,7 @@ app.MapGet("/order/{groupId}/summary", async (string groupId, HttpContext contex
                 <td></td>
               </tr>
             </table>
+            </div>
           </div>
         </div>
         <div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
